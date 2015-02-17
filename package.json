@@ -1,0 +1,19 @@
+{
+  "name": "finciero-account",
+  "version": "1.0.0",
+  "description": "Bank account model for Finciero",
+  "main": "account.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Finciero/finciero-account.git"
+  },
+  "author": "Rafael Vidaurre",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Finciero/finciero-account/issues"
+  },
+  "homepage": "https://github.com/Finciero/finciero-account"
+}
