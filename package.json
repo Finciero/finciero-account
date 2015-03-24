@@ -1,6 +1,6 @@
 {
   "name": "finciero-account",
-  "version": "1.0.4",
+  "version": "2.0.4",
   "description": "Bank account model for Finciero",
   "main": "account.js",
   "scripts": {
