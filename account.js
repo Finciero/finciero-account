@@ -14,7 +14,7 @@
   var Account = function (accountAttrs) {
     // Constants
     // ---------
-    var ACCOUNT_TYPES = ['checking', 'credit', 'credit_line', 'vista', 'saving'];
+    var ACCOUNT_TYPES = ['checking', 'credit_card', 'credit_line', 'vista', 'saving'];
     var CURRENCIES = ['international', 'national'];
 
     // Private Properties
