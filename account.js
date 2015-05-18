@@ -1,182 +1,134 @@
-// Account 0.1.0
-// This class handles accounts formatting and validation
-//
-// Author: Rafael Vidaurre
+'use strict';
 
-(function () {
-  'use strict';
-  // Dependencies
-  // ------------
-  var check = require('validator').check;
+var ACCOUNT_TYPE, CURRENCIES, VALID_KEYS, check, _, checkKeys, checkCurrency, accountType;
 
-  // Account Class
-  // =============
-  var Account = function (accountAttrs) {
-    // Constants
-    // ---------
-    var ACCOUNT_TYPES = ['checking', 'credit_card', 'credit_line', 'vista', 'saving'];
-    var CURRENCIES = ['international', 'national'];
+check = require('validator').check;
+_ = require('lodash');
 
-    // Private Properties
-    // ------------------
-    var _balance, _currency, _name, _type, _uid, _vanityUid;
+ACCOUNT_TYPE = ['checking', 'credit_card', 'credit_line', 'vista', 'saving'];
+CURRENCIES = ['international', 'national'];
+VALID_KEYS = ['number', 'name', 'kind', 'currency', 'balance'];
 
-    // Pattern matched for setters and getters
-    var _patternMatch = function (setter, getter, arg) {
-      if (typeof(arg) === 'undefined') {
-        return getter();
-      }
-      return setter(arg);
-    };
-
-    // Setters and Getters
-    // -------------------
-    var _getBalance = function () {
-      return _balance;
-    };
-    var _getCurrency = function () {
-      return _currency;
-    };
-    var _getName = function () {
-      return _name;
-    };
-    var _getType = function () {
-      return _type;
-    };
-    var _getUid = function () {
-      return _uid;
-    };
-    var _getVanityUid = function () {
-      return _vanityUid;
-    };
-
-    var _setBalance = function (b) {
-      if (isNaN(b)) {
-        throw "Balance must be a valid number";
-      }
-
-      _balance = parseFloat(b);
-    };
-    var _setCurrency = function (c) {
-      check(CURRENCIES, 'Invalid currency').contains(c);
-      _currency = c;
-    };
-    var _setName = function (n) {
-      check(n, 'Name can\'t be empty').notEmpty();
-      if (typeof(n) !== 'string') {
-        throw 'Name must be a string';
-      }
-      _name = n;
-    };
-    var _setType = function (t) {
-      check(ACCOUNT_TYPES, 'Invalid account type').contains(t);
-      _type = t;
-    };
-    var _setUid = function (u) {
-      check(u, 'UID cannot be empty').notEmpty();
-      if (typeof(u) !== 'string') {
-        throw 'UID must be a string';
-      }
-      _uid = u;
-    };
-    var _setVanityUid = function (v) {
-      check(v, 'Vanity UID cannot be empty').notEmpty();
-      if (typeof(v) !== 'string') {
-        throw 'Vanity UID must be a string';
-      }
-      _vanityUid = v;
-    };
-
-    // Public Methods
-    // --------------
-    this.balance = function (arg) {
-      return _patternMatch(_setBalance, _getBalance, arg);
-    };
-    this.currency = function (arg) {
-      return _patternMatch(_setCurrency, _getCurrency, arg);
-    };
-    this.type = function (arg) {
-      return _patternMatch(_setType, _getType, arg);
-    };
-    this.uid = function (arg) {
-      return _patternMatch(_setUid, _getUid, arg);
-    };
-    this.vanityUid = function (arg) {
-      return _patternMatch(_setVanityUid, _getVanityUid, arg);
-    };
-    this.name = function (arg) {
-      return _patternMatch(_setName, _getName, arg);
-    };
-
-    // Receives an object and sets properties from it
-    this.set = function (obj) {
-      if (typeof(obj.uid) !== 'undefined') {
-        _setUid(obj.uid);
-      }
-      if (typeof(obj.vanityUid) !== 'undefined') {
-        _setVanityUid(obj.vanityUid);
-      }
-      if (typeof(obj.vanity_uid) !== 'undefined') {
-        _setVanityUid(obj.vanity_uid);
-      }
-      if (typeof(obj.name) !== 'undefined') {
-        _setName(obj.name);
-      }
-      if (typeof(obj.type) !== 'undefined') {
-        _setType(obj.type);
-      }
-      if (typeof(obj.type_name) !== 'undefined') {
-        _setType(obj.type);
-      }
-      if (typeof(obj.typeName) !== 'undefined') {
-        _setType(obj.type);
-      }
-      if (typeof(obj.currency) !== 'undefined') {
-        _setCurrency(obj.currency);
-      }
-      if (typeof(obj.balance) !== 'undefined') {
-        _setBalance(obj.balance);
-      }
-    };
-
-    // Returns a formatted object literal
-    this.build = function () {
-      var balance = _getBalance();
-      var currency = _getCurrency();
-      var name = _getName();
-      var type = _getType();
-      var uid = _getUid();
-      var vanityUid = _getVanityUid();
-
-      var errMsg = 'Not all attributes have been set.';
-
-      // Validations
-      check(balance, errMsg).notNull().notEmpty();
-      check(currency, errMsg).notNull().notEmpty();
-      check(type, errMsg).notNull().notEmpty();
-      check(uid, errMsg).notNull().notEmpty();
-      check(name, errMsg).notNull().notEmpty();
-      check(vanityUid, errMsg).notNull().notEmpty();
-
-      return {
-        'balance': balance,
-        'currency': currency,
-        'name': name,
-        'type_name': type,
-        'uid': uid,
-        'vanity_uid': vanityUid,
-      };
-    };
-
-    // Aliases
-    this.typeName = this.type;
-    this.vanity = this.vanityUid;
-    this.UID = this.uid;
-
-    if (typeof(accountAttrs) === 'object') {
-      this.set(accountAttrs);
+checkKeys = function (obj) {
+  _.every(obj, function (value, key) {
+    if (!_.includes(VALID_KEYS, key)) {
+      throw new Error('Key \'' + key + '\' is not valid.');
     }
-  };
 
-  module.exports = Account;
-}).call(this);
+    return true;
+  });
+  return this;
+};
+
+checkCurrency = function (currency) {
+  var noCurrency = _.includes(CURRENCIES, currency);
+
+  if (!noCurrency) {
+    throw new Error('Invalid currency.');
+  }
+
+  return this;
+};
+
+accountType = function (type) {
+  var noType = _.includes(ACCOUNT_TYPE, type);
+
+  if (!noType) {
+    throw new Error('Invalid account type.');
+  }
+
+  return this;
+};
+
+/**
+ * Module to check and format account data
+ * @param {Object} accObj Object with accounts data.
+ *
+ * Object example:
+ * {
+ *  'name': 'Cuenta Corriente',
+ *  'kind': 'checking',
+ *  'currency': 'national',
+ *  'balance': 449086,
+ *  'number': '000067899946'
+ * }
+ */
+function Account (accObj) {
+  if (typeof accObj === 'undefined') {
+    return this;
+  }
+
+  checkKeys(accObj);
+  this.number(accObj.number);
+  this.name(accObj.name);
+  this.kind(accObj.kind);
+  this.currency(accObj.currency);
+  this.balance(accObj.balance);
+
+}
+
+Account.prototype.build = function () {
+  var number, name, kind, currency, balance;
+
+  number = this.number();
+  check(number, 'Number cannot be empty').notNull().notEmpty();
+
+  name = this.name();
+  check(name, 'Name cannot be empty').notNull().notEmpty();
+
+  kind = this.kind();
+  check(kind, 'Kind cannot be empty').notNull().notEmpty();
+  accountType(kind);
+
+  currency = this.currency();
+  check(currency, 'Currency cannot be empty').notNull().notEmpty();
+  checkCurrency(currency);
+
+  balance = this.balance();
+  check(balance, 'Balance cannot be empty').notNull().notEmpty().isInt();
+
+  return {
+    'name': name,
+    'kind': kind,
+    'currency': currency,
+    'balance': balance,
+    'number': number
+  };
+};
+
+Account.prototype.balance = function (balance) {
+  if (typeof balance !== 'undefined') {
+    this._balance = balance;
+  }
+  return this._balance;
+};
+
+Account.prototype.currency = function (currency) {
+  if (typeof currency !== 'undefined') {
+    this._currency = currency;
+  }
+  return this._currency;
+};
+
+Account.prototype.kind = function (kind) {
+  if (typeof kind !== 'undefined') {
+    this._kind = kind;
+  }
+  return this._kind;
+};
+
+Account.prototype.name = function (name) {
+  if (typeof name !== 'undefined') {
+    this._name = name;
+  }
+  return this._name;
+};
+
+Account.prototype.number = function (number) {
+  if (typeof number !== 'undefined') {
+    this._number = number;
+  }
+  return this._number;
+};
+
+module.exports = Account;

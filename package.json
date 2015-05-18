@@ -4,19 +4,28 @@
   "description": "Bank account model for Finciero",
   "main": "account.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Finciero/finciero-account.git"
   },
   "author": "Rafael Vidaurre",
+  "contributors": [
+    {
+      "name": "Rodrigo Fuenzalida"
+    }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Finciero/finciero-account/issues"
   },
   "homepage": "https://github.com/Finciero/finciero-account",
   "dependencies": {
+    "lodash": "^3.8.0",
     "validator": "2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0"
   }
 }
