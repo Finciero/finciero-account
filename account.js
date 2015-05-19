@@ -1,6 +1,6 @@
 'use strict';
 
-var ACCOUNT_TYPE, CURRENCIES, VALID_KEYS, check, _, checkKeys, checkCurrency, accountType;
+var ACCOUNT_TYPE, CURRENCIES, VALID_KEYS, check, _, checkKeys, checkCurrency, checkKind;
 
 check = require('validator').check;
 _ = require('lodash');
@@ -17,7 +17,7 @@ checkKeys = function (obj) {
 
     return true;
   });
-  return this;
+  return true;
 };
 
 checkCurrency = function (currency) {
@@ -27,17 +27,17 @@ checkCurrency = function (currency) {
     throw new Error('Invalid currency.');
   }
 
-  return this;
+  return true;
 };
 
-accountType = function (type) {
+checkKind = function (type) {
   var noType = _.includes(ACCOUNT_TYPE, type);
 
   if (!noType) {
     throw new Error('Invalid account type.');
   }
 
-  return this;
+  return true;
 };
 
 /**
@@ -78,7 +78,7 @@ Account.prototype.build = function () {
 
   kind = this.kind();
   check(kind, 'Kind cannot be empty').notNull().notEmpty();
-  accountType(kind);
+  checkKind(kind);
 
   currency = this.currency();
   check(currency, 'Currency cannot be empty').notNull().notEmpty();
