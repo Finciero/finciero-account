@@ -8,7 +8,14 @@ MOCKUP = {
     'name': 'Cuenta Corriente',
     'kind': 'checking',
     'currency': 'national',
-    'balance': 449086,
+    'balance': 449086.0,
+    'number': '000067899946'
+  },
+  'goodDecimal': {
+    'name': 'Cuenta Corriente',
+    'kind': 'checking',
+    'currency': 'national',
+    'balance': 44.5,
     'number': '000067899946'
   },
   'badKey': {
@@ -79,6 +86,11 @@ describe('Module Account', function () {
     it ('should check if acc is an object.', function () {
       var acc = new Account(MOCKUP.good);
       assert.isObject(acc, 'Acc is an object.');
+    });
+
+    it ('should check if acc is an object.', function () {
+      var acc = new Account(MOCKUP.goodDecimal);
+      acc.build();
     });
 
     it ('should check if acc has property name.', function () {

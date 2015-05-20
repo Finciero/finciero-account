@@ -85,7 +85,7 @@ Account.prototype.build = function () {
   checkCurrency(currency);
 
   balance = this.balance();
-  check(balance, 'Balance cannot be empty').notNull().notEmpty().isInt();
+  check(balance, 'Balance cannot be empty').notNull().notEmpty().isFloat();
 
   return {
     'name': name,
@@ -98,9 +98,9 @@ Account.prototype.build = function () {
 
 Account.prototype.balance = function (balance) {
   if (typeof balance !== 'undefined') {
-    this._balance = balance;
+    this._balance = parseFloat(balance);
   }
-  return this._balance;
+  return parseFloat(this._balance);
 };
 
 Account.prototype.currency = function (currency) {
