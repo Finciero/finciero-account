@@ -39,7 +39,7 @@ describe('Module Account', function () {
       var fn = function () {
         var acc = new Account(MOCKUP.badKey);
       };
-      assert.throws(fn, Error);
+      assert.throws(fn, Error, 'Key \'uid\' is not valid.');
     });
 
     it ('should throw if value is not properly set.', function () {
@@ -47,7 +47,7 @@ describe('Module Account', function () {
         var acc = new Account(MOCKUP.badValue);
         acc.build();
       };
-      assert.throws(fn, Error);
+      assert.throws(fn, Error, 'Invalid account type.');
     });
 
     it ('should throw if value is not properly set.', function () {
@@ -55,31 +55,25 @@ describe('Module Account', function () {
         var acc = new Account(MOCKUP.missingValue);
         acc.build();
       };
-      assert.throws(fn, Error);
+      assert.throws(fn, Error, 'Kind cannot be empty');
     });
 
     it ('should set missing property and does not throw', function () {
-      var fn = function () {
-        var acc = new Account(MOCKUP.missingValue);
-        acc.kind('checking');
-        acc.build();
-      };
-      assert.doesNotThrow(fn, Error);
+      var acc = new Account(MOCKUP.missingValue);
+      acc.kind('checking');
+      acc.build();
     });
 
     it ('should set all property of a new instance and does not throw', function () {
-      var fn = function () {
-        var acc = new Account();
+      var acc = new Account();
 
-        acc.name('Cuenta Corriente');
-        acc.kind('checking');
-        acc.currency('national');
-        acc.balance(449086);
-        acc.number('000067899946');
+      acc.name('Cuenta Corriente');
+      acc.kind('checking');
+      acc.currency('national');
+      acc.balance(449086);
+      acc.number('000067899946');
 
-        acc.build();
-      };
-      assert.doesNotThrow(fn, Error);
+      acc.build();
     });
 
     it ('should check if acc is an object.', function () {
