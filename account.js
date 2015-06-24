@@ -1,6 +1,6 @@
 'use strict';
 
-var ACCOUNT_TYPE, CURRENCIES, VALID_KEYS, check, _, checkKeys, checkCurrency, checkKind;
+var ACCOUNT_TYPE, CURRENCIES, VALID_KEYS, check, _, checkKeys, checkCurrency, checkKind, isString;
 
 check = require('validator').check;
 _ = require('lodash');
@@ -8,6 +8,13 @@ _ = require('lodash');
 ACCOUNT_TYPE = ['checking', 'credit_card', 'credit_line', 'vista', 'saving'];
 CURRENCIES = ['international', 'national'];
 VALID_KEYS = ['number', 'name', 'kind', 'currency', 'balance'];
+
+isString = function (str, errorMsg) {
+  if (typeof str !== 'string') {
+    throw new Error(errorMsg);
+  }
+  return true;
+};
 
 checkKeys = function (obj) {
   _.every(obj, function (value, key) {
@@ -71,16 +78,20 @@ Account.prototype.build = function () {
   var number, name, kind, currency, balance;
 
   number = this.number();
+  isString(number, 'Invalid number variable type.');
   check(number, 'Number cannot be empty').notNull().notEmpty();
 
   name = this.name();
+  isString(name, 'Invalid name variable type.');
   check(name, 'Name cannot be empty').notNull().notEmpty();
 
   kind = this.kind();
+  isString(kind, 'Invalid kind variable type.');
   check(kind, 'Kind cannot be empty').notNull().notEmpty();
   checkKind(kind);
 
   currency = this.currency();
+  isString(currency, 'Invalid currency variable type.');
   check(currency, 'Currency cannot be empty').notNull().notEmpty();
   checkCurrency(currency);
 
